@@ -1,0 +1,56 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class WelcomePage {
+    private JPanel panel;
+    // Button to view current stock
+    private JButton viewButton;
+    // Button to reorder items
+    private JButton reorderButton;
+    // Button to manage suppliers
+    private JButton manageSuppliersButton;
+
+    public WelcomePage(JFrame mainFrame) {
+        panel = new JPanel(new GridLayout(3, 1));
+
+        // Initialize buttons
+        viewButton = new JButton("View Current Stock");
+        reorderButton = new JButton("Reorder Item");
+        manageSuppliersButton = new JButton("Manage Suppliers");
+
+        // Add buttons to the panel
+        panel.add(viewButton);
+        panel.add(reorderButton);
+        panel.add(manageSuppliersButton);
+
+        //Sets the main frame's content pane to ViewStockPage
+        viewButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    mainFrame.setContentPane(new ViewStockPage(mainFrame).getPanel());
+                    mainFrame.revalidate();
+                }
+            });
+
+        //Sets the main frame's content pane to ReorderPage
+        reorderButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    mainFrame.setContentPane(new ReorderPage(mainFrame).getPanel());
+                    mainFrame.revalidate();
+                }
+            });
+
+        //Sets the main frame's content pane to ManageSuppliersPage.
+        manageSuppliersButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    mainFrame.setContentPane(new ManageSuppliersPage(mainFrame).getPanel());
+                    mainFrame.revalidate();
+                }
+            });
+    }
+
+    public JPanel getPanel() {
+        return panel;
+    }
+}
