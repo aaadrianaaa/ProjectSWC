@@ -1,0 +1,81 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class ManageSuppliersPage {
+    private JPanel panel;
+    private JTextField supplierNameField;
+    private JTextField contactField;
+    private JButton addButton;
+    private JButton backButton;
+    private JTextArea suppliersArea;
+
+    public ManageSuppliersPage(JFrame mainFrame) {
+        panel = new JPanel(new BorderLayout());
+
+        // Adding new suppliers
+        JPanel topPanel = new JPanel(new GridLayout(3, 2));
+        JLabel supplierNameLabel = new JLabel("Supplier Name:");
+        supplierNameField = new JTextField();
+        JLabel contactLabel = new JLabel("Contact Information:");
+        contactField = new JTextField();
+        addButton = new JButton("Add Supplier");
+
+        topPanel.add(supplierNameLabel);
+        topPanel.add(supplierNameField);
+        topPanel.add(contactLabel);
+        topPanel.add(contactField);
+        topPanel.add(new JLabel()); 
+        topPanel.add(addButton);
+
+        // To display added suppliers
+        suppliersArea = new JTextArea();
+        suppliersArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(suppliersArea);
+
+        // Bottom buttons
+        JPanel bottomPanel = new JPanel();
+        backButton = new JButton("Back");
+        bottomPanel.add(backButton);
+
+        panel.add(topPanel, BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(bottomPanel, BorderLayout.SOUTH);
+
+        // Example data
+        suppliersArea.setText("Supplier: Na Interprice, Contact: 010-2355027\n");
+
+        // Add supplier button
+        addButton.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e) {
+                    String supplierName = supplierNameField.getText();
+                    String contact = contactField.getText();
+
+                    // Valid input
+                    if (supplierName.isEmpty() || contact.isEmpty()) {
+                        JOptionPane.showMessageDialog(mainFrame, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        // Add supplier to displayed list
+                        suppliersArea.append("Supplier: " + supplierName + ", Contact: " + contact + "\n");
+                        supplierNameField.setText("");
+                        contactField.setText("");
+                    }
+                }
+            });
+
+        // Action listener for back button
+        backButton.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e) {
+                    mainFrame.setContentPane(new WelcomePage(mainFrame).getPanel());
+                    mainFrame.revalidate();
+                }
+            });
+    }
+
+    public JPanel getPanel() {
+        return panel;
+    }
+}
