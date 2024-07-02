@@ -1,0 +1,39 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class StockServicePage {
+    private static StockServicePage instance;
+    private Map<String, Integer> inventory;
+
+    // Private constructor to prevent instantiation
+    private StockServicePage() {
+        inventory = new HashMap<>();
+        // Adding initial stock data
+        inventory.put("Vanilla Gardenia", 20);
+        inventory.put("Strawberry Gardenia", 15);
+        inventory.put("Chocolate Gardenia", 22);
+        inventory.put("Blueberry Gardenia", 12);
+    }
+
+    // Method to get instance of StockService
+    public static StockServicePage getInstance() {
+        if (instance == null) {
+            instance = new StockServicePage();
+        }
+        return instance;
+    }
+
+    // Method to get current stock data
+    public synchronized Map<String, Integer> getStockData() {
+        return new HashMap<>(inventory); // Return a copy of the inventory
+    }
+
+    // Method to reorder item and update the stock
+    public synchronized void reorderItem(String itemName, int quantity) {
+        if (inventory.containsKey(itemName)) {
+            inventory.put(itemName, inventory.get(itemName) + quantity);
+        } else {
+            inventory.put(itemName, quantity);
+        }
+    }
+}
