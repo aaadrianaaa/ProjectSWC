@@ -1,0 +1,51 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Map;
+
+public class ViewStockPage {
+    JPanel panel;
+    JTextArea stockArea;
+    JButton backButton;
+
+    //Constructs the ViewStockPage with stock display
+    public ViewStockPage(JFrame mainFrame) {
+        panel = new JPanel(new BorderLayout());
+
+        stockArea = new JTextArea();
+        stockArea.setEditable(false);
+        backButton = new JButton("Back");
+
+        panel.add(new JScrollPane(stockArea), BorderLayout.CENTER);
+        panel.add(backButton, BorderLayout.SOUTH);
+
+        // Refresh stock view initially
+        refreshStockView();
+
+        backButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    mainFrame.setContentPane(new WelcomePage(mainFrame).getPanel());
+                    mainFrame.revalidate();
+                }
+            });
+    }
+
+    //Update the updated stock display 
+    public void refreshStockView() {
+        Map<String, Integer> stockData = StockServicePage.getInstance().getStockData();
+        StringBuilder stockText = new StringBuilder();
+
+        for (Map.Entry<String, Integer> entry : stockData.entrySet()) {
+            stockText.append("Item Name: ").append(entry.getKey())
+            .append(", Quantity: ").append(entry.getValue())
+            .append("\n");
+        }
+
+        stockArea.setText(stockText.toString());
+    }
+
+    public JPanel getPanel() {
+        return panel;
+    }
+}
