@@ -1,0 +1,78 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class ReorderPage {
+    JPanel panel;
+    JTextField ItemNameField;
+    JTextField reorderQuantityField;
+    JButton reorderButton;
+    JButton backButton;
+    JFrame mainFrame;
+
+    //Constructs ReorderPage with item name and reorder quantity
+    public ReorderPage(JFrame mainFrame) {
+        this.mainFrame = mainFrame;
+        panel = new JPanel(new GridLayout(3, 2));
+
+        JLabel ItemNameLabel = new JLabel("Item Name:");
+        ItemNameField = new JTextField();
+        JLabel reorderQuantityLabel = new JLabel("Reorder Quantity:");
+        reorderQuantityField = new JTextField();
+        reorderButton = new JButton("Reorder");
+        backButton = new JButton("Back");
+
+        panel.add(ItemNameLabel);
+        panel.add(ItemNameField);
+        panel.add(reorderQuantityLabel);
+        panel.add(reorderQuantityField);
+        panel.add(reorderButton);
+        panel.add(backButton);
+
+        // Action listener for the reorder button
+        reorderButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String itemName = ItemNameField.getText();
+                    int quantity;
+
+                    try {
+                        quantity = Integer.parseInt(reorderQuantityField.getText());
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(mainFrame, "Please enter a valid number for quantity", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // Validate input
+                    if (itemName.isEmpty() || quantity <= 0) {
+                        JOptionPane.showMessageDialog(mainFrame, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        // Update stock data
+                        StockServicePage.getInstance().reorderItem(itemName, quantity);
+                        JOptionPane.showMessageDialog(mainFrame, "Reorder placed successfully for " + itemName + "!");
+
+                        // Update view stock page
+                        updateViewStockPage();
+                    }
+                }
+            });
+
+        // Action listener for back button
+        backButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    mainFrame.setContentPane(new WelcomePage(mainFrame).getPanel());
+                    mainFrame.revalidate();
+                }
+            });
+    }
+
+    //Updates view to display the updated stock data page.
+    private void updateViewStockPage() {
+        mainFrame.setContentPane(new ViewStockPage(mainFrame).getPanel());
+        mainFrame.revalidate();
+    }
+
+    public JPanel getPanel() {
+        return panel;
+    }
+}
